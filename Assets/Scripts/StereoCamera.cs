@@ -28,7 +28,7 @@ public class StereoCamera : MonoBehaviour {
 	void Update () {
 		Camera cam = GetComponent<Camera>();
 
-		print (transform.position.x);
+		//print (transform.position.x);
 		float leftScreen = screenWidth / 2.0f + transform.position.x;
 		left = -cam.nearClipPlane / -transform.position.z * leftScreen;
 

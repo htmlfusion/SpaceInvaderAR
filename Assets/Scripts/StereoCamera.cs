@@ -4,7 +4,9 @@ using System.Collections;
 public class StereoCamera : MonoBehaviour {
 
 	public string eye = "left";
-	public string screenName = "Screen";
+	//public string screenName = "Screen";
+
+	public GameObject screen;
 
 	public float left = -0.2F;
 	public float right = 0.2F;
@@ -14,11 +16,13 @@ public class StereoCamera : MonoBehaviour {
 	public float screenWidth;
 	public float screenHeight;
 
-	private GameObject screen;
+
+
+	//private GameObject screen;
 
 	// Use this for initialization
 	void Start () {
-		screen = GameObject.Find(screenName);
+		//screen = GameObject.Find(screenName);
 		Renderer mf = screen.GetComponent<Renderer>();
 		screenWidth = mf.bounds.size.x;
 		screenHeight = mf.bounds.size.y;
@@ -28,7 +32,20 @@ public class StereoCamera : MonoBehaviour {
 	void Update () {
 		Camera cam = GetComponent<Camera>();
 
+		float leftScreen = screenWidth / 2.0f + transform.position.x;
+		left = -cam.nearClipPlane / -transform.position.z * leftScreen;
+		
+		float rightScreen = screenWidth / 2.0f - transform.position.x;
+		right = cam.nearClipPlane / -transform.position.z * rightScreen;
+		
+		float bottomScreen = - screenHeight / 2.0f - transform.position.y;
+		bottom = cam.nearClipPlane / -transform.position.z * bottomScreen;
+		
+		float topScreen = screenHeight / 2.0f - transform.position.y;
+		top = cam.nearClipPlane / -transform.position.z * topScreen;
+
 		//print (transform.position.x);
+		/** Orignal Jesse code for reference
 		float leftScreen = screenWidth / 2.0f + transform.position.x;
 		left = -cam.nearClipPlane / -transform.position.z * leftScreen;
 
@@ -40,12 +57,19 @@ public class StereoCamera : MonoBehaviour {
 		
 		float topScreen = screenHeight / 2.0f - transform.position.y;
 		top = cam.nearClipPlane / -transform.position.z * topScreen;
+		**/
+		//Quaternion lookAtRotation = Quaternion.LookRotation(screen.transform.position, Vector3.forward);
+		
+		// Lerp the camera's rotation between it's current rotation and the rotation that looks at the player.
+		//transform.rotation = Quaternion.Lerp(transform.rotation, lookAtRotation,  Time.deltaTime);
+		transform.rotation = Quaternion.LookRotation(screen.transform.position, Vector3.forward);
 	}
 
 	void LateUpdate() {
 		Camera cam = GetComponent<Camera>();
 		Matrix4x4 m = PerspectiveOffCenter(left, right, bottom, top, cam.nearClipPlane, cam.farClipPlane);
 		cam.projectionMatrix = m;
+		Debug.Log("Matrics cam:" + m);
 	}
 
 	static Matrix4x4 PerspectiveOffCenter(float left, float right, float bottom, float top, float near, float far) {

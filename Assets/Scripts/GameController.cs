@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
     public Vector3 spawnValues;
     public int alienRows;
     public int alienLines;
-    public float spawnWait;
+    //public float spawnWait;
     public float startWait;
     public float waveWait;
     public int rowSpace;

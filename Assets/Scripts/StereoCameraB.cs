@@ -18,6 +18,7 @@ public class StereoCameraB : MonoBehaviour {
 	
 	
 	private int increment;
+	private float io = 0; 
 	//private GameObject screen;
 	
 	// Use this for initialization
@@ -27,6 +28,14 @@ public class StereoCameraB : MonoBehaviour {
 		screenWidth = mf.bounds.size.x;
 		screenHeight = mf.bounds.size.y;
 
+		// 6 cm ~3in, * 25 (world scale) / 2 
+		/*
+		if (eye == "left") {
+			io = -35;
+		}
+		if (eye == "right") {
+			io = 35;
+		}*/
 	}
 
 	void OnDrawGizmosSelected() {
@@ -41,10 +50,10 @@ public class StereoCameraB : MonoBehaviour {
 
 		Camera cam = GetComponent<Camera>();
 		
-		float leftScreen = screenWidth / 2.0f + transform.position.x;
+		float leftScreen = screenWidth / 2.0f + transform.position.x + io;
 		left = -cam.nearClipPlane / -transform.position.z * leftScreen;
 		
-		float rightScreen = screenWidth / 2.0f - transform.position.x;
+		float rightScreen = screenWidth / 2.0f - transform.position.x + io;
 		right = cam.nearClipPlane / -transform.position.z * rightScreen;
 		
 		float bottomScreen = - screenHeight / 2.0f - transform.position.y;
@@ -53,11 +62,11 @@ public class StereoCameraB : MonoBehaviour {
 		float topScreen = screenHeight / 2.0f - transform.position.y;
 		top = cam.nearClipPlane / -transform.position.z * topScreen;
 
-		Vector3 relativePos = screen.transform.position - transform.position;
-		Quaternion rotation = Quaternion.LookRotation(relativePos);
-		transform.rotation = rotation;
+		//Vector3 relativePos = screen.transform.position - transform.position;
+		//Quaternion rotation = Quaternion.LookRotation(relativePos);
+		//transform.rotation = rotation;
 
-		Debug.Log (screen.transform.position);
+		//Debug.Log (screen.transform.position);
 
 		//GetComponent<Camera>().ResetProjectionMatrix();
 		//Quaternion lookAtRotation = Quaternion.LookRotation(screen.transform.position, Vector3.forward);	
@@ -69,9 +78,8 @@ public class StereoCameraB : MonoBehaviour {
 	void LateUpdate() {
 		Camera cam = GetComponent<Camera>();
 		Matrix4x4 m = PerspectiveOffCenter(left, right, bottom, top, cam.nearClipPlane, cam.farClipPlane);
-		cam.ResetProjectionMatrix ();
+		//cam.ResetProjectionMatrix ();
 		cam.projectionMatrix = m;
-		Debug.Log("Matrics cam:" + m);
 	}
 	
 	static Matrix4x4 PerspectiveOffCenter(float left, float right, float bottom, float top, float near, float far) {

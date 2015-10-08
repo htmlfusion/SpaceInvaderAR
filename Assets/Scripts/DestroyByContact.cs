@@ -3,12 +3,15 @@ using System.Collections;
 
 public class DestroyByContact : MonoBehaviour {
 
-    public GameObject explosion;
+    public Transform explosion;
     public int scoreValue;
+	public AudioClip boom;
     private GameController gameController;
+
 
     void Start()
     {
+		// Go and grab the gamecontroller object
         GameObject gameControllerObject = GameObject.FindGameObjectWithTag("GameController");
         if (gameControllerObject != null)
         {
@@ -20,6 +23,9 @@ public class DestroyByContact : MonoBehaviour {
         }
     }
 
+	void Update() {
+	}
+
     void OnTriggerEnter(Collider other)
     {
 		Debug.Log ("colided");
@@ -27,11 +33,14 @@ public class DestroyByContact : MonoBehaviour {
         {
             return;
         }
-		Debug.Log ("boom");
-        //if (explosion != null)
-        //{
+
+		GetComponent<AudioSource>().PlayOneShot (boom, 1F);
+
+        if (explosion != null)
+        {
             Instantiate(explosion, transform.position, transform.rotation);
-        //}
+			Debug.Log ("boom");
+        }
 
         if (other.tag == "Player")
         {

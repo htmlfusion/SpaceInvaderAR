@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
@@ -11,10 +12,10 @@ public class GameController : MonoBehaviour {
     public float startWait;
     public float waveWait;
     public int rowSpace;
-    //public GUIText scoreText;
+    public GameObject scoreText;
     //public GUIText restartText;
     // public GUIText gameOverText;
-
+	public Transform Boom;
 
     private bool gameOver;
     private bool restart;
@@ -33,6 +34,18 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (Input.GetKeyDown (KeyCode.R))
+		{
+			//Application.LoadLevel (Application.loadedLevel);
+			score = 0;
+		}
+		if (Input.GetKeyDown (KeyCode.E)) {
+
+			//Vector3 expLoc = new Vector3(0,0,500);
+			Instantiate (Boom, new Vector3(0,0,500) , Quaternion.identity);
+			Debug.Log ("Boom");
+		}
 	
 	}
 
@@ -66,13 +79,14 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public void AddScore(int newscore)
+    public void AddScore(int newPoints)
     {
-
-    }
+		score += newPoints;
+		UpdateScore ();
+	}
     void UpdateScore()
     {
-
+		scoreText.GetComponent<Text>().text = "Score: " + score;
     }
     public void GameOver()
     {

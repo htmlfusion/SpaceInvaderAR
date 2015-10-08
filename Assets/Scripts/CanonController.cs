@@ -8,14 +8,22 @@ public class CanonController : MonoBehaviour {
 	
 	//Assume a reference to the scene HandController object
 	public HandController handCtrl;
-	
+
+	public AudioClip shootSound;
 	public GameObject shot;
 	public Transform shotSpawn;
 	public float fireRate;
 	
 	private float nextFire;
 	private Quaternion canonRotation;
-	
+	private AudioSource source;
+
+	void Awake () {
+
+		source = GetComponent<AudioSource> ();
+
+	}
+
 	void Update(){
 		Frame frame = handCtrl.GetFrame();
 		Hand rightHand = frame.Hands.Rightmost;
@@ -41,9 +49,10 @@ public class CanonController : MonoBehaviour {
 		{
 			nextFire =  Time.time + fireRate;
 			GameObject nextShot = (GameObject)Instantiate (shot, shotSpawn.position, canonRotation);
-			//nextShot.GetComponent<Rigidbody>().velocity = new Vector3(0,0, 5 * speed);
-			//nextShot.GetComponent<Rigidbody>().velocity = canonRotation.eulerAngles;
-			nextShot.GetComponent<Rigidbody>().AddForce(Vector3.forward * 5);
+			nextShot.GetComponent<Rigidbody>().AddForce(Vector3.forward * speed);
+			source.Play (); 
+			//source.PlayOneShot(shootSound, 1F);
+
 		}
 		
 
